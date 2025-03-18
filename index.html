@@ -1,0 +1,846 @@
+// script.js - Add this to your existing JavaScript file
+
+// TPD Newsletter Data Manager
+class TPDNewsletterDataManager {
+  constructor() {
+    // Default papers from the newsletter
+    this.defaultPapers = [
+      {
+        id: "science-1",
+        title: "Novel Bifunctional Degraders for Targeting Oncogenic KRAS Mutants",
+        authors: "Johnson A, Smith B, Williams C, et al.",
+        journal: "science",
+        abstract: "We report the development of potent bifunctional degraders targeting oncogenic KRAS G12C mutants with improved pharmacokinetic properties. These novel molecular glues employ a unique linker design that enhances cellular penetration while maintaining strong binding affinity to both the target protein and E3 ligase complex. In vitro and in vivo studies demonstrate rapid and selective degradation of KRAS G12C with concurrent inhibition of downstream signaling pathways. This approach circumvents resistance mechanisms observed with traditional KRAS inhibitors and shows promise in preclinical models of non-small cell lung cancer.",
+        link: "#",
+        imageUrl: "/api/placeholder/200/200",
+        timestamp: new Date(new Date().getFullYear(), new Date().getMonth(), 28, 12, 0, 0, 0).toISOString(),
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1
+      },
+      {
+        id: "nature-1",
+        title: "Structural Basis for Cereblon-Mediated Protein Degradation by Molecular Glues",
+        authors: "Chen Y, Garcia R, Patel K, et al.",
+        journal: "nature",
+        abstract: "We present high-resolution cryo-EM structures of the CRL4CRBN E3 ubiquitin ligase in complex with various molecular glue degraders and their target proteins. These structures reveal critical interactions that dictate the specificity and efficiency of targeted protein degradation. Through structure-guided design, we developed a series of optimized molecular glues with enhanced binding properties and cellular activity. Our findings provide a comprehensive framework for rational design of cereblon-based degraders and illuminate the molecular mechanisms underlying their function.",
+        link: "#",
+        imageUrl: "/api/placeholder/200/200",
+        timestamp: new Date(new Date().getFullYear(), new Date().getMonth(), 28, 12, 0, 0, 0).toISOString(),
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1
+      },
+      {
+        id: "cell-1",
+        title: "Mapping the Degradable Kinome Using Proteome-Wide PROTAC Screens",
+        authors: "Zhang L, Nakamura T, Rodriguez S, et al.",
+        journal: "cell",
+        abstract: "Here we present a comprehensive analysis of the degradable kinome using a library of kinase-targeted PROTACs. Through systematic screening of over 500 kinases, we identified key determinants of degradation efficiency including surface-exposed lysine residues, protein structural features, and subcellular localization. Our dataset provides a valuable resource for the rational design of kinase degraders and reveals unexpected relationships between kinase families and their susceptibility to targeted degradation. This work establishes a framework for predicting degradability across the proteome and highlights novel therapeutic opportunities.",
+        link: "#",
+        imageUrl: "/api/placeholder/200/200",
+        timestamp: new Date(new Date().getFullYear(), new Date().getMonth(), 28, 12, 0, 0, 0).toISOString(),
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1
+      },
+      {
+        id: "jacs-1",
+        title: "Photoswitchable PROTACs Enable Spatiotemporal Control of Protein Degradation",
+        authors: "Wang D, Koseki M, Levy R, et al.",
+        journal: "jacs",
+        abstract: "We describe the development of light-responsive PROTACs capable of inducing protein degradation with precise spatial and temporal control. These photoswitchable degraders incorporate azobenzene moieties that undergo reversible isomerization upon exposure to specific wavelengths of light, allowing for controlled engagement of the E3 ligase complex. Using BRD4 as a model target, we demonstrate rapid and reversible protein degradation in response to light stimulation both in vitro and in living cells. This approach enables unprecedented control over protein levels and facilitates the study of dynamic cellular processes.",
+        link: "#",
+        imageUrl: "/api/placeholder/200/200",
+        timestamp: new Date(new Date().getFullYear(), new Date().getMonth(), 28, 12, 0, 0, 0).toISOString(),
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1
+      },
+      {
+        id: "jmc-1",
+        title: "Structure-Based Design of MDM2-Recruiting PROTACs for Selective p53 Degradation",
+        authors: "Thompson B, Ramirez J, O'Connor M, et al.",
+        journal: "jmc",
+        abstract: "We report the design, synthesis, and biological evaluation of a series of MDM2-recruiting PROTACs targeting the tumor suppressor p53. Through systematic optimization of the linker composition and attachment points, we identified compounds with remarkable selectivity for mutant p53 over wild-type p53. The lead compound demonstrated nanomolar degradation potency in multiple cancer cell lines harboring p53 mutations while sparing wild-type p53 in normal cells. This approach provides a novel therapeutic strategy for cancers driven by p53 mutations and highlights the potential of PROTACs to achieve isoform selectivity.",
+        link: "#",
+        imageUrl: "/api/placeholder/200/200",
+        timestamp: new Date(new Date().getFullYear(), new Date().getMonth(), 28, 12, 0, 0, 0).toISOString(),
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1
+      }
+    ];
+    
+    this.papers = [];
+    this.loadPapers();
+  }
+  
+  // Load papers from localStorage or use defaults
+  loadPapers() {
+    try {
+      const storedPapers = localStorage.getItem('tpdNewsletter_papers');
+      if (storedPapers) {
+        this.papers = JSON.parse(storedPapers);
+      } else {
+        this.papers = [...this.defaultPapers];
+        this.savePapers();
+      }
+    } catch (error) {
+      console.error('Error loading papers:', error);
+      this.papers = [...this.defaultPapers];
+    }
+    return this.papers;
+  }
+  
+  // Save papers to localStorage
+  savePapers() {
+    try {
+      localStorage.setItem('tpdNewsletter_papers', JSON.stringify(this.papers));
+    } catch (error) {
+      console.error('Error saving papers:', error);
+    }
+  }
+  
+  // Get papers by journal
+  getPapersByJournal(journal) {
+    if (journal === 'all') {
+      return [...this.papers];
+    }
+    return this.papers.filter(paper => paper.journal === journal);
+  }
+  
+  // Get papers by archive year and month
+  getPapersByArchiveDate(year, month) {
+    return this.papers.filter(paper => paper.year === year && paper.month === month);
+  }
+  
+  // Get all available archive dates
+  getArchiveDates() {
+    const uniqueDates = new Map();
+    
+    this.papers.forEach(paper => {
+      if (paper.year && paper.month) {
+        const key = `${paper.year}-${String(paper.month).padStart(2, '0')}`;
+        uniqueDates.set(key, { year: paper.year, month: paper.month });
+      }
+    });
+    
+    return Array.from(uniqueDates.values()).sort((a, b) => {
+      // Sort by year desc, then by month desc
+      return b.year - a.year || b.month - a.month;
+    });
+  }
+  
+  // Get paper by ID
+  getPaperById(id) {
+    return this.papers.find(paper => paper.id === id);
+  }
+  
+  // Add new paper
+  addPaper(paperData) {
+    // Generate a unique ID
+    const journalCount = this.papers.filter(p => p.journal === paperData.journal).length + 1;
+    const id = `${paperData.journal}-${journalCount}`;
+    
+    // Ensure timestamp, year, and month values
+    if (!paperData.timestamp) {
+      const now = new Date();
+      const archiveDate = new Date(now.getFullYear(), now.getMonth(), 28, 12, 0, 0, 0);
+      paperData.timestamp = archiveDate.toISOString();
+      paperData.year = archiveDate.getFullYear();
+      paperData.month = archiveDate.getMonth() + 1;
+    }
+    
+    const newPaper = {
+      id,
+      ...paperData,
+      link: paperData.link || '#',
+      imageUrl: paperData.imageUrl || '/api/placeholder/200/200'
+    };
+    
+    this.papers.push(newPaper);
+    this.savePapers();
+    return newPaper;
+  }
+  
+  // Update paper
+  updatePaper(id, newData) {
+    const index = this.papers.findIndex(paper => paper.id === id);
+    if (index !== -1) {
+      this.papers[index] = {
+        ...this.papers[index],
+        ...newData
+      };
+      this.savePapers();
+      return true;
+    }
+    return false;
+  }
+  
+  // Delete paper
+  deletePaper(id) {
+    const originalLength = this.papers.length;
+    this.papers = this.papers.filter(paper => paper.id !== id);
+    
+    if (this.papers.length !== originalLength) {
+      this.savePapers();
+      return true;
+    }
+    return false;
+  }
+  
+  // Export all papers as JSON
+  exportJSON() {
+    return JSON.stringify(this.papers, null, 2);
+  }
+  
+  // Import papers from JSON
+  importJSON(jsonString) {
+    try {
+      const importedPapers = JSON.parse(jsonString);
+      if (!Array.isArray(importedPapers)) {
+        throw new Error('Invalid format: expected an array of papers');
+      }
+      
+      // Minimal validation
+      importedPapers.forEach(paper => {
+        if (!paper.title || !paper.authors || !paper.journal || !paper.abstract) {
+          throw new Error('Invalid paper format: missing required fields');
+        }
+      });
+      
+      this.papers = importedPapers;
+      this.savePapers();
+      return true;
+    } catch (error) {
+      console.error('Import error:', error);
+      return false;
+    }
+  }
+}
+
+// Initialize the newsletter admin functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Create the data manager
+  const dataManager = new TPDNewsletterDataManager();
+  
+  // Make data manager accessible (for archive functionality)
+  window.dataManager = dataManager;
+  
+  // Create and append admin button (hidden by default)
+  const adminButton = document.createElement('button');
+  adminButton.id = 'adminButton';
+  adminButton.className = 'admin-button';
+  adminButton.innerHTML = '+';
+  adminButton.style.display = 'none';
+  document.body.appendChild(adminButton);
+  
+  // Listen for the special keyboard combination (Ctrl+Shift+A)
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+      adminButton.style.display = 'flex';
+    }
+  });
+  
+  // Create admin panel container
+  const adminPanelContainer = document.createElement('div');
+  adminPanelContainer.innerHTML = `
+    <div id="adminPanel" class="admin-panel">
+      <div class="admin-header">
+        <h2 class="admin-title">TPD Newsletter Admin Panel</h2>
+        <button id="closeAdmin" class="admin-close">Close</button>
+      </div>
+      
+      <div class="admin-tabs">
+        <div id="addTab" class="admin-tab active">Add Paper</div>
+        <div id="manageTab" class="admin-tab">Manage Papers</div>
+        <div id="archiveManagementTab" class="admin-tab">Archive Management</div>
+        <div id="importExportTab" class="admin-tab">Import/Export</div>
+      </div>
+      
+      <div id="adminContent" class="admin-content">
+        <!-- Add Paper Form -->
+        <div id="addPaperForm">
+          <div class="form-group">
+            <label for="paperTitle">Paper Title</label>
+            <input type="text" id="paperTitle" class="form-control" placeholder="Enter paper title">
+          </div>
+          
+          <div class="form-group">
+            <label for="paperAuthors">Authors</label>
+            <input type="text" id="paperAuthors" class="form-control" placeholder="e.g. Smith J, Johnson A, et al.">
+          </div>
+          
+          <div class="form-group">
+            <label for="paperLink">Paper URL</label>
+            <input type="url" id="paperLink" class="form-control" placeholder="https://example.com/paper">
+          </div>
+          
+          <div class="form-group">
+            <label for="paperJournal">Journal Section</label>
+            <select id="paperJournal" class="form-control">
+              <option value="science">Science</option>
+              <option value="nature">Nature</option>
+              <option value="cell">Cell</option>
+              <option value="jacs">JACS</option>
+              <option value="jmc">J Med Chem</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="paperAbstract">Abstract</label>
+            <textarea id="paperAbstract" class="form-control" placeholder="Paste abstract here"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="paperTimestamp">Archive Date</label>
+            <input type="date" id="paperTimestamp" class="form-control">
+            <p class="form-hint">Papers are archived on the 28th of each month by default.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="paperImage">Image Upload</label>
+            <input type="file" id="paperImage" accept="image/*">
+            <div id="imagePreviewContainer">
+              <img id="imagePreview" class="image-preview" style="display: none;">
+            </div>
+          </div>
+          
+          <button id="submitPaper" class="btn-primary">Add Paper</button>
+          
+          <div id="addLoading" class="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+          </div>
+        </div>
+        
+        <!-- Manage Papers Form -->
+        <div id="managePapersForm" style="display: none;">
+          <div class="form-group">
+            <label for="filterJournal">Filter by Journal</label>
+            <select id="filterJournal" class="form-control">
+              <option value="all">All Journals</option>
+              <option value="science">Science</option>
+              <option value="nature">Nature</option>
+              <option value="cell">Cell</option>
+              <option value="jacs">JACS</option>
+              <option value="jmc">J Med Chem</option>
+            </select>
+          </div>
+          
+          <div id="paperList" class="paper-list">
+            <!-- Papers will be listed here dynamically -->
+          </div>
+          
+          <div id="manageLoading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading papers...</p>
+          </div>
+        </div>
+        
+        <!-- Archive Management Form -->
+        <div id="archiveManagementForm" style="display: none;">
+          <div class="form-group">
+            <h3>Archive Management</h3>
+            <p>Papers are automatically added to the archive on the 28th day of each month. Use the calendar below to set custom archive dates.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="bulkArchiveDate">Bulk Archive Date</label>
+            <input type="date" id="bulkArchiveDate" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label>Select Papers to Archive</label>
+            <div id="archivePaperList" class="paper-list">
+              <!-- Papers will be listed here dynamically -->
+            </div>
+          </div>
+          
+          <button id="bulkArchiveButton" class="btn-primary">Update Archive Dates</button>
+          
+          <div id="archiveManagementLoading" class="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+          </div>
+        </div>
+        
+        <!-- Import/Export Form -->
+        <div id="importExportForm" style="display: none;">
+          <div class="form-group">
+            <label for="exportArea">Export Papers (JSON)</label>
+            <button id="generateExport" class="btn-primary">Generate Export Data</button>
+            <textarea id="exportArea" class="form-control" style="height: 200px;" readonly></textarea>
+            <button id="copyExport" class="btn-primary" style="margin-top: 10px;">Copy to Clipboard</button>
+          </div>
+          
+          <hr style="margin: 20px 0;">
+          
+          <div class="form-group">
+            <label for="importArea">Import Papers (JSON)</label>
+            <textarea id="importArea" class="form-control" style="height: 200px;" placeholder="Paste JSON data here"></textarea>
+            <button id="processImport" class="btn-primary" style="margin-top: 10px;">Process Import</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="confirmation-modal">
+      <div class="confirmation-content">
+        <h3 class="confirmation-title">Are you sure you want to delete this paper?</h3>
+        <p>This action cannot be undone.</p>
+        <div class="confirmation-buttons">
+          <button id="confirmDelete" class="btn-confirm">Delete</button>
+          <button id="cancelDelete" class="btn-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Append admin panel styles
+  const adminStyles = document.createElement('style');
+  adminStyles.textContent = `
+    /* Admin Panel Styles */
+    .admin-panel {
+      display: none;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin: 20px auto;
+      max-width: 1200px;
+      padding: 20px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      z-index: 1050;
+    }
+    
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .admin-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .admin-close {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .admin-tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+    
+    .admin-tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #eee;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      margin-right: 5px;
+    }
+    
+    .admin-tab.active {
+      background-color: #fff;
+      border-bottom: 1px solid #fff;
+      margin-bottom: -1px;
+      font-weight: bold;
+    }
+    
+    .admin-content {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 4px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-hint {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    textarea.form-control {
+      min-height: 150px;
+      font-family: monospace;
+    }
+    
+    select.form-control {
+      height: 42px;
+    }
+    
+    .btn-primary {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+    
+    .paper-list {
+      margin-top: 20px;
+    }
+    
+    .paper-item {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .paper-info {
+      flex-grow: 1;
+    }
+    
+    .paper-title-list {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .paper-journal {
+      color: #666;
+      font-style: italic;
+    }
+    
+    .paper-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn-edit, .btn-delete {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .btn-edit {
+      background-color: #2196F3;
+      color: white;
+    }
+    
+    .btn-delete {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .admin-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .admin-button:hover {
+      background-color: #45a049;
+    }
+    
+    /* Confirmation Modal Styles */
+    .confirmation-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .confirmation-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .confirmation-title {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    
+    .confirmation-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .confirmation-buttons button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .btn-confirm {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .btn-cancel {
+      background-color: #ccc;
+      color: black;
+    }
+    
+    /* Loading indicator */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 2s linear infinite;
+      margin: 0 auto 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Image preview */
+    .image-preview {
+      max-width: 200px;
+      max-height: 200px;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      padding: 5px;
+    }
+    
+    #imagePreviewContainer {
+      margin-top: 10px;
+    }
+    
+    /* Archive Management Styles */
+    .paper-checkbox {
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .archive-paper-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
+    .select-all-container {
+      background-color: #f5f7fa;
+      border: 1px dashed #aaa;
+    }
+    
+    #archivePaperList {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    
+    /* Archive Tab Styles */
+    .archive-section {
+      margin-bottom: 30px;
+    }
+    
+    .archive-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .archive-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+    
+    .archive-navigation {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .archive-link {
+      padding: 5px 10px;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      color: #333;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    
+    .archive-link:hover, .archive-link.active {
+      background-color: #ddd;
+    }
+  `;
+  
+  // Append elements to the document
+  document.head.appendChild(adminStyles);
+  document.body.appendChild(adminPanelContainer);
+  
+  // Get necessary DOM elements
+  const adminPanel = document.getElementById('adminPanel');
+  const closeAdmin = document.getElementById('closeAdmin');
+  const addTab = document.getElementById('addTab');
+  const manageTab = document.getElementById('manageTab');
+  const archiveManagementTab = document.getElementById('archiveManagementTab');
+  const importExportTab = document.getElementById('importExportTab');
+  const addPaperForm = document.getElementById('addPaperForm');
+  const managePapersForm = document.getElementById('managePapersForm');
+  const archiveManagementForm = document.getElementById('archiveManagementForm');
+  const importExportForm = document.getElementById('importExportForm');
+  const paperImage = document.getElementById('paperImage');
+  const imagePreview = document.getElementById('imagePreview');
+  const submitPaper = document.getElementById('submitPaper');
+  const filterJournal = document.getElementById('filterJournal');
+  const paperList = document.getElementById('paperList');
+  const confirmationModal = document.getElementById('confirmationModal');
+  const confirmDelete = document.getElementById('confirmDelete');
+  const cancelDelete = document.getElementById('cancelDelete');
+  const generateExport = document.getElementById('generateExport');
+  const exportArea = document.getElementById('exportArea');
+  const copyExport = document.getElementById('copyExport');
+  const importArea = document.getElementById('importArea');
+  const processImport = document.getElementById('processImport');
+  
+  let currentPaperToDelete = null;
+  let editingPaperId = null;
+  
+  // Expose variables for archive functionality
+  window.editingPaperId = null;
+  
+  // Admin button shows the panel
+  adminButton.addEventListener('click', function() {
+    adminPanel.style.display = 'block';
+    adminButton.style.display = 'none';
+  });
+  
+  // Close button hides the panel
+  closeAdmin.addEventListener('click', function() {
+    adminPanel.style.display = 'none';
+    adminButton.style.display = 'flex';
+  });
+  
+  // Tab switching
+  addTab.addEventListener('click', function() {
+    addTab.classList.add('active');
+    manageTab.classList.remove('active');
+    archiveManagementTab.classList.remove('active');
+    importExportTab.classList.remove('active');
+    addPaperForm.style.display = 'block';
+    managePapersForm.style.display = 'none';
+    archiveManagementForm.style.display = 'none';
+    importExportForm.style.display = 'none';
+  });
+  
+  manageTab.addEventListener('click', function() {
+    manageTab.classList.add('active');
+    addTab.classList.remove('active');
+    archiveManagementTab.classList.remove('active');
+    importExportTab.classList.remove('active');
+    managePapersForm.style.display = 'block';
+    addPaperForm.style.display = 'none';
+    archiveManagementForm.style.display = 'none';
+    importExportForm.style.display = 'none';
+    
+    // Load papers when switching to manage tab
+    loadPapersList();
+  });
+  
+  archiveManagementTab.addEventListener('click', function() {
+    archiveManagementTab.classList.add('active');
+    addTab.classList.remove('active');
+    manageTab.classList.remove('active');
+    importExportTab.classList.remove('active');
+    archiveManagementForm.style.display = 'block';
+    addPaperForm.style.display = 'none';
+    managePapersForm.style.display = 'none';
+    importExportForm.style.display = 'none';
+    
+    // Load papers for archiving
+    loadPapersForArchiving();
+  });
+  
+  importExportTab.addEventListener('click', function() {
+    importExportTab.classList.add('active');
+    addTab.classList.remove('active');
+    manageTab.classList.remove('active');
+    archiveManagementTab.classList.remove('active');
+    importExportForm.style.display = 'block';
+    addPaperForm.style.display = 'none';
+    managePapersForm.style.display = 'none';
+    archiveManagementForm.style.display = 'none';
+  });
