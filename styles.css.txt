@@ -1,0 +1,543 @@
+:root {
+    --primary-color: #1a73e8;
+    --secondary-color: #34a853;
+    --accent-color: #7c4dff;
+    --text-color: #202124;
+    --light-text: #5f6368;
+    --background-color: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #e0e0e0;
+    --hover-color: #f5f7fa;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: var(--background-color);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+header .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tabs-container {
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 81px;
+    z-index: 99;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.nav-tabs {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+}
+
+.nav-tab {
+    padding: 0;
+    margin: 0;
+}
+
+.nav-link {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.nav-link.active {
+    color: var(--primary-color);
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+.site-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 15px 0;
+    background: linear-gradient(120deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+.journal-section {
+    margin-bottom: 40px;
+}
+
+.journal-header {
+    border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.journal-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.paper-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+}
+
+.paper-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.paper-title {
+    padding: 20px 20px 5px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.paper-authors {
+    padding: 0 20px 15px;
+    font-size: 14px;
+    color: var(--light-text);
+    font-style: italic;
+}
+
+.paper-content {
+    display: flex;
+    padding: 0 20px 20px;
+}
+
+.paper-image {
+    flex: 0 0 200px;
+    margin-right: 20px;
+}
+
+.paper-image img {
+    border-radius: 6px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.paper-abstract {
+    flex: 1;
+}
+
+.paper-abstract p {
+    margin-bottom: 15px;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.paper-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.paper-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+a.paper-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+a.paper-button:hover {
+    background-color: #0d5bba;
+}
+
+button.paper-button {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+button.paper-button:hover {
+    background-color: rgba(26, 115, 232, 0.05);
+}
+
+.chart-container {
+    height: 400px;
+    margin: 40px 0;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+footer {
+    background-color: var(--text-color);
+    color: white;
+    padding: 40px 0;
+    margin-top: 60px;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.subscribe-form {
+    display: flex;
+    gap: 10px;
+}
+
+.subscribe-input {
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    min-width: 250px;
+}
+
+.subscribe-button {
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.subscribe-button:hover {
+    background-color: #2d9548;
+}
+
+.citation-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    border-radius: 8px;
+    width: 600px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-button {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--light-text);
+}
+
+.citation-types {
+    display: flex;
+    gap: 10px;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.citation-type-button {
+    padding: 8px 16px;
+    border: none;
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.citation-type-button.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.citation-text {
+    padding: 20px;
+    margin: 15px 0;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.copy-button {
+    display: block;
+    width: calc(100% - 40px);
+    margin: 0 20px 20px;
+    padding: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.copy-button:hover {
+    background-color: #6a3cde;
+}
+
+.copy-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #323232;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 2000;
+}
+
+.copy-notification.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Archive Tab Styles */
+.archive-year {
+    margin-bottom: 30px;
+}
+
+.year-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.archive-month {
+    margin-bottom: 20px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.month-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.month-header:hover {
+    background-color: var(--hover-color);
+}
+
+.month-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.toggle-button {
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.toggle-button:hover {
+    background-color: rgba(26, 115, 232, 0.1);
+}
+
+.month-content {
+    padding: 0 20px 20px;
+}
+
+.archive-journal {
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.archive-journal:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.journal-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin: 15px 0 10px;
+}
+
+.archive-paper {
+    margin-bottom: 15px;
+}
+
+.archive-paper:last-child {
+    margin-bottom: 0;
+}
+
+.form-hint {
+    font-size: 12px;
+    color: var(--light-text);
+    margin-top: 5px;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .site-title {
+        font-size: 24px;
+        padding: 0 10px;
+    }
+    
+    .nav-link {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .paper-content {
+        flex-direction: column;
+    }
+    
+    .paper-image {
+        flex: none;
+        margin-right: 0;
+        margin-bottom: 15px;
+        max-width: 100%;
+    }
+    
+    .subscribe-form {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .subscribe-input {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .tabs-container {
+        top: 65px;
+    }
+    
+    /* Archive responsive styles */
+    .year-title {
+        font-size: 20px;
+    }
+    
+    .month-title {
+        font-size: 16px;
+    }
+    
+    .journal-name {
+        font-size: 15px;
+    }
+    
+    .month-header {
+        padding: 12px 15px;
+    }
+    
+    .month-content {
+        padding: 0 15px 15px;
+    }
+}
